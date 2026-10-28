@@ -1,50 +1,291 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rickroll Activity</title>
-    <!-- Include the official Discord Embedded App SDK -->
-    <script src="https://jsdelivr.net"></script>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #000;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FUCK OFF — Clicker</title>
+<style>
+:root {
+  color-scheme: dark;
+  --pink: #ff65c3;
+  --purple: #a78bfa;
+  --cyan: #70f0ff;
+  --muted: #bdb4d5;
+  --edge: rgba(255,255,255,.17);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; color: #fbf7ff;
+  font-family: system-ui, sans-serif;
+  background: radial-gradient(ellipse at top, #38235d, #100b20 70%);
+}
+.wrap { max-width: 1100px; margin: auto; padding: 28px 18px; }
+header { text-align: center; margin-bottom: 28px; }
+h1 {
+  font-size: clamp(3rem, 9vw, 6rem);
+  letter-spacing: -.07em;
+  margin: 22px 0;
+  background: linear-gradient(100deg, white, #ffb7e6, #c3a9ff, #8cf6ff);
+  color: transparent; background-clip: text;
+}
+.subtitle, .desc, .label { color: var(--muted); }
+.layout { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.glass {
+  background: linear-gradient(135deg, #ffffff1b, #ffffff06);
+  border: 1px solid var(--edge);
+  border-radius: 25px;
+  box-shadow: 0 24px 80px #0005, inset 0 1px #ffffff22;
+  backdrop-filter: blur(26px) saturate(150%);
+  -webkit-backdrop-filter: blur(26px) saturate(150%);
+}
+.main, .shop, .rebirth { padding: 22px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat, .rstat {
+  background: #08061166;
+  border: 1px solid #ffffff15;
+  border-radius: 15px; padding: 14px;
+}
+.label { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; }
+.num { font-size: 1.7rem; font-weight: 900; overflow-wrap: anywhere; }
+.clickzone {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 22px; padding: 32px 0;
+}
+.bigbutton {
+  width: min(260px, 70vw); aspect-ratio: 1; border-radius: 50%;
+  border: 1px solid #ffffff70; color: white; cursor: pointer;
+  font-size: 2.4rem; font-weight: 1000;
+  background: linear-gradient(145deg, #ff9bdd, #ff4db7 40%, #8e43ff);
+  box-shadow: inset 0 3px 2px #ffffffa3,
+    inset 0 -13px 30px #5313a477,
+    0 0 65px #ed43ce44, 0 15px 0 #55218d;
+  transition: .12s;
+}
+.bigbutton:hover { filter: brightness(1.15); transform: translateY(-2px); }
+.bigbutton:active { transform: translateY(8px) scale(.97); }
+.pill, .sectiontag {
+  padding: 8px 12px; border: 1px solid #ffffff20;
+  border-radius: 99px; background: #ffffff09;
+}
+.right { display: flex; flex-direction: column; gap: 18px; }
+.sectionhead { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+h2 { font-size: 1.25rem; }
+.sectiontag { font-size: .7rem; color: #d9c8ff; }
+.upgrade {
+  display: flex; align-items: center; gap: 12px;
+  margin-top: 10px; padding: 12px;
+  border: 1px solid #ffffff16; border-radius: 16px;
+  background: #ffffff08;
+}
+.emoji { font-size: 1.6rem; }
+.info { flex: 1; min-width: 0; }
+.info strong { display: block; }
+.desc { font-size: .8rem; margin-top: 4px; }
+.buy, .rebirthbtn {
+  color: white; font-weight: 850; cursor: pointer;
+  border: 1px solid #ffffff40; border-radius: 12px;
+  padding: 11px; background: linear-gradient(135deg, #b86bff, #7546d9);
+}
+.buy:disabled, .rebirthbtn:disabled { opacity: .35; cursor: not-allowed; }
+.rebirth {
+  padding: 22px; overflow: hidden;
+  background: linear-gradient(135deg, #311342cc, #171127dd, #18233cdd);
+}
+.rebirth p { color: var(--muted); line-height: 1.5; }
+.rebirthstats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+.rnum { font-size: 1.4rem; font-weight: 900; margin-top: 5px; }
+.rebirthbtn {
+  width: 100%; padding: 15px; font-size: 1rem;
+  background: linear-gradient(100deg, #ff5aa9, #a44cff, #6a7bff);
+}
+.bottom { display: flex; justify-content: space-between; gap: 10px; margin-top: 15px; color: var(--muted); }
+.smallbtn {
+  background: #ffffff08; color: var(--muted);
+  border: 1px solid #ffffff25; border-radius: 10px; padding: 8px; cursor: pointer;
+}
+.float {
+  position: fixed; pointer-events: none; z-index: 10;
+  font-weight: 950; color: #ffb2e5; text-shadow: 0 0 18px #ff4fc5;
+  animation: float .85s ease-out forwards;
+}
+@keyframes float { to { transform: translateY(-85px) scale(1.15); opacity: 0; } }
+footer { text-align: center; color: #827994; margin: 25px; font-size: .8rem; }
+@media(max-width:800px) { .layout { grid-template-columns: 1fr; } }
+@media(max-width:450px) { .main,.shop,.rebirth { padding: 15px; } .upgrade { gap: 8px; } }
+</style>
 </head>
 <body>
+<div class="wrap">
+<header>
+  <div>✦ THE EXTREMELY UNNECESSARY CLICKER ✦</div>
+  <h1>FUCK OFF.</h1>
+  <p class="subtitle">Turn raw spite into an interdimensional fuck-you empire.</p>
+</header>
 
-    <!-- Embedded YouTube Player playing the specific video provided -->
-    <iframe 
-        src="https://youtube.com" 
-        allow="autoplay; encrypted-media; picture-in-picture" 
-        allowfullscreen>
-    </iframe>
+<div class="layout">
+<section class="glass main">
+  <div class="stats">
+    <div class="stat"><div class="label">Fuck-you currency</div><div class="num" id="count">0</div></div>
+    <div class="stat"><div class="label">Fuck you / click</div><div class="num" id="perClick">1</div></div>
+    <div class="stat"><div class="label">Fuck you / second</div><div class="num" id="perSecond">0</div></div>
+    <div class="stat"><div class="label">Lifetime fuck yous</div><div class="num" id="lifetime">0</div></div>
+  </div>
+  <div class="clickzone">
+    <button class="bigbutton" id="mainButton">FUCK<br>YOU!</button>
+    <div class="pill"><span id="multiplier">x1.00</span> spite multiplier</div>
+    <div class="subtitle">Go on. You know you want to.</div>
+  </div>
+</section>
 
-    <script>
-        // Instantiate the Discord SDK
-        const discordSdk = new Discord.DiscordSDK(window.location.search);
+<div class="right">
+<section class="glass shop">
+  <div class="sectionhead"><h2>🛍️ Spite upgrades</h2><span class="sectiontag">LEVEL UP</span></div>
+  <div id="shop"></div>
+  <div class="bottom"><span id="owned">0 upgrades owned</span><button class="smallbtn" id="reset">Wipe save</button></div>
+</section>
 
-        async function setupDiscordSDK() {
-            try {
-                await discordSdk.ready();
-                console.log("Discord SDK is ready and authenticated inside the Activity layout!");
-            } catch (error) {
-                console.error("Failed to initialize Discord SDK:", error);
-            }
-        }
+<section class="glass rebirth">
+  <div class="sectionhead"><h2>🌌 Fuck Off Rebirth</h2><span class="sectiontag">PRESTIGE</span></div>
+  <p>Fuck off into another dimension! Reset your normal progress and earn permanent power. Each rebirth makes the next one ten times more expensive.</p>
+  <div class="rebirthstats">
+    <div class="rstat"><div class="label">Fuck Off power</div><div class="rnum" id="foPower">0</div></div>
+    <div class="rstat"><div class="label">Rebirths</div><div class="rnum" id="rebirths">0</div></div>
+    <div class="rstat"><div class="label">Next rebirth</div><div class="rnum" id="rebirthCost">1M</div></div>
+    <div class="rstat"><div class="label">Permanent multiplier</div><div class="rnum" id="rebirthMult">x1.00</div></div>
+  </div>
+  <button class="rebirthbtn" id="rebirthBtn" disabled>NOT ENOUGH FUCK YOUs</button>
+  <p class="desc">Cost: 1,000,000 × 10<sup>rebirths</sup>. Each rebirth grants +1 permanent power, multiplying production by your new total power + 1.</p>
+</section>
+</div>
+</div>
+<footer>100% spite. 0% emotional maturity. Progress saves in this browser.</footer>
+</div>
 
-        setupDiscordSDK();
-    </script>
+<script>
+(() => {
+const upgrades = [
+ {id:'audacity',name:'Industrial-Grade Audacity',emoji:'😤',desc:'+1 fuck you per click',base:15,growth:1.55,click:1,cps:0},
+ {id:'megaphone',name:'Cursed Megaphone',emoji:'📢',desc:'+8 fuck you per click',base:120,growth:1.62,click:8,cps:0},
+ {id:'intern',name:'Minimum-Wage Menace',emoji:'🧑‍💻',desc:'2 fuck yous per second',base:70,growth:1.52,click:0,cps:2},
+ {id:'department',name:'Department of Fuck-Offery',emoji:'🏢',desc:'15 fuck yous per second',base:550,growth:1.6,click:0,cps:15},
+ {id:'horde',name:'A Horde of Haters',emoji:'👹',desc:'100 fuck yous per second',base:3500,growth:1.68,click:0,cps:100},
+ {id:'satellite',name:'Orbital Swearing Cannon',emoji:'🛰️',desc:'+250 fuck you per click',base:18000,growth:1.74,click:250,cps:0},
+ {id:'eldritch',name:'Eldritch Fuck Generator',emoji:'🌀',desc:'1,500 fuck yous per second',base:95000,growth:1.8,click:0,cps:1500}
+];
+
+const $ = id => document.getElementById(id);
+const fresh = () => ({
+ count:0, lifetime:0, owned:Object.fromEntries(upgrades.map(u=>[u.id,0])),
+ power:0, rebirths:0
+});
+let state = fresh();
+try {
+ const saved = JSON.parse(localStorage.getItem('fuckOffClickerSave'));
+ if(saved && typeof saved === 'object')
+   state = {...fresh(),...saved,owned:{...fresh().owned,...(saved.owned||{})}};
+} catch(e) {}
+
+const fmt = n => Math.floor(n).toLocaleString('en-US');
+const short = n => {
+ if(n < 1000) return fmt(n);
+ const units=['K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc'];
+ let i=-1;
+ while(n>=1000 && i<units.length-1){n/=1000;i++;}
+ return n.toFixed(n>=100?0:n>=10?1:2)+units[i];
+};
+const price = u => Math.floor(u.base*Math.pow(u.growth,state.owned[u.id]));
+const rebirthCost = () => 1e6*Math.pow(10,state.rebirths);
+const multiplier = () => 1+state.power;
+const clickPower = () => Math.floor(
+ (1+upgrades.reduce((s,u)=>s+u.click*state.owned[u.id],0))*multiplier()
+);
+const cps = () => upgrades.reduce((s,u)=>s+u.cps*state.owned[u.id],0)*multiplier();
+
+function save(){
+ try {localStorage.setItem('fuckOffClickerSave',JSON.stringify(state));}
+ catch(e){}
+}
+function render(){
+ $('count').textContent=short(state.count);
+ $('perClick').textContent=short(clickPower());
+ $('perSecond').textContent=short(cps());
+ $('lifetime').textContent=short(state.lifetime);
+ $('multiplier').textContent='x'+multiplier().toFixed(2);
+ $('foPower').textContent=fmt(state.power);
+ $('rebirths').textContent=fmt(state.rebirths);
+ $('rebirthCost').textContent=short(rebirthCost());
+ $('rebirthMult').textContent='x'+multiplier().toFixed(2);
+ $('rebirthBtn').disabled=state.count<rebirthCost();
+ $('rebirthBtn').textContent=state.count>=rebirthCost()
+   ? 'FUCK OFF TO THE NEXT UNIVERSE 🚀'
+   : 'NEED '+short(rebirthCost()-state.count)+' MORE FUCK YOUs';
+ $('owned').textContent=Object.values(state.owned).reduce((a,b)=>a+b,0)+' upgrades owned';
+
+ $('shop').innerHTML=upgrades.map(u=>{
+   const p=price(u);
+   return `<div class="upgrade">
+     <div class="emoji">${u.emoji}</div>
+     <div class="info"><strong>${u.name}</strong>
+       <div class="desc">${u.desc}</div>
+       <div class="desc">Owned: ${state.owned[u.id]}</div>
+     </div>
+     <button class="buy" data-buy="${u.id}" ${state.count>=p?'':'disabled'}>${short(p)} 💎</button>
+   </div>`;
+ }).join('');
+}
+function floatText(x,y,text){
+ const el=document.createElement('div');
+ el.className='float'; el.textContent=text;
+ el.style.left=x+'px'; el.style.top=y+'px';
+ document.body.appendChild(el);
+ setTimeout(()=>el.remove(),900);
+}
+
+$('mainButton').addEventListener('click',e=>{
+ const gain=clickPower();
+ state.count+=gain; state.lifetime+=gain;
+ floatText(e.clientX,e.clientY,'+'+short(gain)+' FUCK YOU');
+ render(); save();
+});
+
+$('shop').addEventListener('click',e=>{
+ const b=e.target.closest('[data-buy]');
+ if(!b)return;
+ const u=upgrades.find(x=>x.id===b.dataset.buy);
+ const p=price(u);
+ if(state.count<p)return;
+ state.count-=p; state.owned[u.id]++;
+ render(); save();
+});
+
+$('rebirthBtn').addEventListener('click',()=>{
+ const cost=rebirthCost();
+ if(state.count<cost)return;
+ if(!confirm('FUCK OFF REBIRTH? Your currency and upgrades reset, but permanent power increases.'))return;
+ state.count=0;
+ state.owned=Object.fromEntries(upgrades.map(u=>[u.id,0]));
+ state.power++; state.rebirths++;
+ render(); save();
+});
+
+$('reset').addEventListener('click',()=>{
+ if(!confirm('Wipe EVERYTHING, including all rebirth power?'))return;
+ state=fresh(); render(); save();
+});
+
+let last=Date.now();
+setInterval(()=>{
+ const now=Date.now();
+ const dt=Math.min((now-last)/1000,2);
+ last=now;
+ const gain=cps()*dt;
+ if(gain>0){state.count+=gain;state.lifetime+=gain;}
+ render(); save();
+},500);
+
+render();
+})();
+</script>
 </body>
 </html>
